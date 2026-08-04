@@ -4,36 +4,55 @@
 
 package frc.robot.subsystems;
 
+import java.io.ObjectInputFilter.Config;
+import java.util.function.Supplier;
+
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ExampleSubsystem extends SubsystemBase {
+
+  SparkMax motorController = new SparkMax(37, SparkMax.MotorType.kBrushed);
+
+
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+  public ExampleSubsystem() {
+    SparkMaxConfig config = new SparkMaxConfig();
+    config.inverted(false);
+    config.idleMode(IdleMode.kCoast);
+    config.smartCurrentLimit(40);
+
+    motorController.configure(
+      config,
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters
+    );
+  }
 
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
+  public Command setSpeedCommand(Supplier<Double> speed) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          /* one-time action goes here */
+          setSpeed(speed.get());
         });
   }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public void setSpeed(double speed) {
+    // Set the speed of a motor or actuator in the subsystem.
+    motorController.set(speed);
   }
+
 
   @Override
   public void periodic() {

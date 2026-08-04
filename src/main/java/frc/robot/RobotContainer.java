@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -48,7 +49,9 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_exampleSubsystem.setDefaultCommand(m_exampleSubsystem.setSpeedCommand(
+      () -> MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.07)
+    ));
 
     m_driverController.a().onTrue(Commands.runOnce(() -> {
       System.out.println("A button pressed");
