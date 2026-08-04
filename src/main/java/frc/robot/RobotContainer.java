@@ -33,7 +33,7 @@ public class RobotContainer {
 
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Example Condition", m_driverController.a().getAsBoolean());
+    SmartDashboard.putBoolean("Button State", m_driverController.a().getAsBoolean());
   }
 
   /**
